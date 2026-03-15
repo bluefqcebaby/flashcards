@@ -1,19 +1,32 @@
-import { createFileRoute } from "@tanstack/react-router"
-import { Button } from "@/components/ui/button"
+import { createFileRoute, redirect } from "@tanstack/react-router"
+import { HomeDashboard } from "@/routes/index/-ui/home-dashboard"
+import { HomeSignedOutLanding } from "@/routes/index/-ui/home-signed-out-landing"
+import { getViewerOnboardingState } from "@/routes/onboarding/-api/get-viewer-onboarding-state"
 
-export const Route = createFileRoute("/")({ component: App })
+export const Route = createFileRoute("/")({
+  beforeLoad: async () => {
+    const viewerState = await getViewerOnboardingState()
 
-function App() {
+    if (viewerState.status === "needs-onboarding") {
+      throw redirect({ to: "/onboarding" })
+    }
+
+    return { viewerState }
+  },
+  component: HomePage,
+})
+
+function HomePage() {
+  const { viewerState } = Route.useRouteContext()
+
+  if (viewerState.status === "signed-out") {
+    return <HomeSignedOutLanding />
+  }
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-      </div>
-    </div>
+    <HomeDashboard
+      preferences={viewerState.preferences}
+      user={viewerState.user}
+    />
   )
 }
