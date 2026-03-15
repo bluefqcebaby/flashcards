@@ -25,7 +25,7 @@ export const languageCatalog: LanguageOption[] = [
 ]
 
 const languageCatalogMap = new Map(
-  languageCatalog.map((language) => [language.code, language]),
+  languageCatalog.map((language) => [language.code, language])
 )
 
 export function getLanguageOption(code: string) {

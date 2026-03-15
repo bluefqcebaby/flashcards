@@ -28,7 +28,9 @@ export type ViewerOnboardingState =
   | { status: "ready"; user: ViewerIdentity; preferences: ViewerPreferences }
 
 export const saveViewerPreferencesInputSchema = z.object({
-  learningLanguageCode: z.string().min(1, "Choose the language you want to learn."),
+  learningLanguageCode: z
+    .string()
+    .min(1, "Choose the language you want to learn."),
   baseLanguageCode: z.string().min(1, "Choose your base language."),
 })
 
@@ -49,10 +51,11 @@ export function formatLanguagePair(preferences: ViewerPreferences) {
 export function getInitials(name: string, email?: string) {
   const source = name.trim() || email?.trim() || "U"
   const parts = source.split(/\s+/).filter(Boolean)
+  const [first = "U", second = ""] = parts
 
   if (parts.length === 1) {
-    return parts[0]!.slice(0, 2).toUpperCase()
+    return first.slice(0, 2).toUpperCase()
   }
 
-  return `${parts[0]![0] ?? ""}${parts[1]![0] ?? ""}`.toUpperCase()
+  return `${first[0] ?? ""}${second[0] ?? ""}`.toUpperCase()
 }

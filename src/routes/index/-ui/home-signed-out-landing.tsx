@@ -5,6 +5,7 @@ import {
   IconLanguage,
   IconSparkles,
 } from "@tabler/icons-react"
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -34,7 +35,7 @@ export function HomeSignedOutLanding() {
       setAuthError(
         error instanceof Error
           ? error.message
-          : "Google sign-in could not be started.",
+          : "Google sign-in could not be started."
       )
       setIsSigningIn(false)
     }
@@ -49,7 +50,9 @@ export function HomeSignedOutLanding() {
               <Badge variant="secondary">MVP onboarding</Badge>
               <Badge variant="outline">Google auth ready</Badge>
             </div>
-            <CardTitle>Learn new vocabulary with a clean language pair setup.</CardTitle>
+            <CardTitle>
+              Learn new vocabulary with a clean language pair setup.
+            </CardTitle>
             <CardDescription>
               Sign in, choose the language you are learning and your base
               language, then we can build the first deck flow on top of that.
@@ -129,7 +132,7 @@ export function HomeSignedOutLanding() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button disabled variant="ghost">
+            <Button disabled={true} variant="ghost">
               Deck creation follows next
               <IconArrowRight data-icon="inline-end" />
             </Button>

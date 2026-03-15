@@ -1,16 +1,13 @@
 import { useState } from "react"
-import { useRouter } from "@tanstack/react-router"
 import {
   IconArrowRight,
   IconBook2,
   IconLogout,
   IconSparkles,
 } from "@tabler/icons-react"
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { useRouter } from "@tanstack/react-router"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -72,7 +69,9 @@ export function HomeDashboard({ preferences, user }: HomeDashboardProps) {
             <div className="flex items-center gap-4">
               <Avatar size="lg">
                 <AvatarImage alt={user.name} src={user.image ?? undefined} />
-                <AvatarFallback>{getInitials(user.name, user.email)}</AvatarFallback>
+                <AvatarFallback>
+                  {getInitials(user.name, user.email)}
+                </AvatarFallback>
               </Avatar>
               <div className="flex min-w-0 flex-col gap-1">
                 <p className="truncate text-sm font-medium">{user.name}</p>
@@ -82,13 +81,21 @@ export function HomeDashboard({ preferences, user }: HomeDashboardProps) {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">{preferences.learningLanguageName}</Badge>
-              <Badge variant="outline">Base: {preferences.baseLanguageName}</Badge>
+              <Badge variant="secondary">
+                {preferences.learningLanguageName}
+              </Badge>
+              <Badge variant="outline">
+                Base: {preferences.baseLanguageName}
+              </Badge>
               <Badge variant="outline">{formatLanguagePair(preferences)}</Badge>
             </div>
           </CardContent>
           <CardFooter className="justify-end">
-            <Button disabled={isSigningOut} onClick={handleSignOut} variant="outline">
+            <Button
+              disabled={isSigningOut}
+              onClick={handleSignOut}
+              variant="outline"
+            >
               {isSigningOut ? (
                 <Spinner data-icon="inline-start" />
               ) : (
@@ -121,7 +128,7 @@ export function HomeDashboard({ preferences, user }: HomeDashboardProps) {
               </EmptyHeader>
               <EmptyContent>
                 <Badge variant="secondary">Coming next</Badge>
-                <Button disabled variant="outline">
+                <Button disabled={true} variant="outline">
                   <IconSparkles data-icon="inline-start" />
                   Create your first deck
                 </Button>
@@ -129,7 +136,7 @@ export function HomeDashboard({ preferences, user }: HomeDashboardProps) {
             </Empty>
           </CardContent>
           <CardFooter>
-            <Button disabled variant="ghost">
+            <Button disabled={true} variant="ghost">
               Explore next step
               <IconArrowRight data-icon="inline-end" />
             </Button>

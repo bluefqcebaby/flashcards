@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { type ViewerIdentity } from "@/routes/onboarding/-model/contracts"
+import type { ViewerIdentity } from "@/routes/onboarding/-model/contracts"
 import { LanguagePairForm } from "@/routes/onboarding/-ui/language-pair-form"
 
 type OnboardingPageProps = {
@@ -32,9 +32,7 @@ export function OnboardingPage({ user }: OnboardingPageProps) {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 text-sm text-muted-foreground">
-            <p>
-              The learning language tells Flashards what you are studying.
-            </p>
+            <p>The learning language tells Flashards what you are studying.</p>
             <p>
               The base language tells Flashards how to explain words, examples,
               and translations.

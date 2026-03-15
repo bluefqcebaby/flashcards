@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm"
-import { text, timestamp, pgTable } from "drizzle-orm/pg-core"
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core"
+
 import { user } from "@/db/auth-schema"
 
 export const userPreferences = pgTable("user_preferences", {
@@ -18,11 +19,14 @@ export const userPreferences = pgTable("user_preferences", {
     .notNull(),
 })
 
-export const userPreferencesRelations = relations(userPreferences, ({ one }) => ({
-  user: one(user, {
-    fields: [userPreferences.userId],
-    references: [user.id],
-  }),
-}))
+export const userPreferencesRelations = relations(
+  userPreferences,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [userPreferences.userId],
+      references: [user.id],
+    }),
+  })
+)
 
 export type UserPreferencesRecord = typeof userPreferences.$inferSelect

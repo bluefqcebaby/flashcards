@@ -1,0 +1,106 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!src/routeTree.gen.ts", "!drizzle/meta"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noLabelWithoutControl": "off",
+        "noStaticElementInteractions": "off"
+      },
+      "suspicious": {
+        "noAlert": "error",
+        "noEvolvingTypes": "error",
+        "noMisplacedAssertion": "error"
+      },
+      "style": {
+        "noEnum": "error",
+        "noImplicitBoolean": "error",
+        "useObjectSpread": "error",
+        "noCommonJs": "error",
+        "noUselessElse": "error",
+        "noYodaExpression": "error",
+        "useAsConstAssertion": "error",
+        "useCollapsedIf": "error",
+        "useReactFunctionComponents": "error",
+        "useSelfClosingElements": "error"
+      },
+      "correctness": {
+        "noEmptyPattern": "error",
+        "noNestedComponentDefinitions": "error",
+        "noReactPropAssignments": "error",
+        "noUndeclaredDependencies": "error",
+        "noUndeclaredVariables": "error"
+      },
+      "complexity": {
+        "noForEach": "error",
+        "useSimplifiedLogicExpression": "error",
+        "noExcessiveCognitiveComplexity": "warn",
+        "noExcessiveLinesPerFunction": {
+          "level": "warn",
+          "options": {
+            "maxLines": 200,
+            "skipBlankLines": true
+          }
+        }
+      },
+      "nursery": {
+        "noDuplicatedSpreadProps": "error",
+        "noEqualsToNull": "error",
+        "noLeakedRender": "error",
+        "noShadow": "error",
+        "useArraySortCompare": "error",
+        "useDestructuring": "error",
+        "useFind": "error",
+        "useSpread": "error"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "asNeeded",
+      "trailingCommas": "es5"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ["react*", "react*/*"],
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              ":ALIAS:",
+              ":BLANK_LINE:",
+              ":PATH:"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

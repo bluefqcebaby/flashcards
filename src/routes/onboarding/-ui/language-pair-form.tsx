@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import { IconArrowRight, IconLanguage, IconSparkles } from "@tabler/icons-react"
 import { useForm } from "@tanstack/react-form"
 import { useServerFn } from "@tanstack/react-start"
-import { IconArrowRight, IconLanguage, IconSparkles } from "@tabler/icons-react"
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import {
@@ -30,9 +31,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
-import {
-  saveViewerPreferences,
-} from "@/routes/onboarding/-api/save-viewer-preferences"
+import { saveViewerPreferences } from "@/routes/onboarding/-api/save-viewer-preferences"
 import {
   formatLanguageLabel,
   type ViewerIdentity,
@@ -67,7 +66,7 @@ export function LanguagePairForm({ user }: LanguagePairFormProps) {
         setSubmitError(
           error instanceof Error
             ? error.message
-            : "Could not save your language pair.",
+            : "Could not save your language pair."
         )
       }
     },
@@ -172,7 +171,9 @@ export function LanguagePairForm({ user }: LanguagePairFormProps) {
 
                 return (
                   <Field data-invalid={showError || undefined}>
-                    <FieldLabel htmlFor={field.name}>Your base language</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      Your base language
+                    </FieldLabel>
                     <Combobox
                       itemToStringLabel={getLanguageSearchLabel}
                       itemToStringValue={(item) => item.code}
