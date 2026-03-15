@@ -22,7 +22,7 @@ export type ViewerPreferences = {
   onboardingCompletedAt: Date
 }
 
-export type ViewerOnboardingState =
+export type ViewerState =
   | { status: "signed-out" }
   | { status: "needs-onboarding"; user: ViewerIdentity }
   | { status: "ready"; user: ViewerIdentity; preferences: ViewerPreferences }

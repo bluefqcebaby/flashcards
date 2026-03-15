@@ -9,19 +9,53 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicOnboardingRouteImport } from './routes/_public/onboarding'
+import { Route as AppStudyRouteImport } from './routes/_app/study'
+import { Route as AppSettingsRouteImport } from './routes/_app/settings'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppAddCardRouteImport } from './routes/_app/add-card'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicOnboardingRoute = PublicOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => PublicRoute,
+} as any)
+const AppStudyRoute = AppStudyRouteImport.update({
+  id: '/study',
+  path: '/study',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAddCardRoute = AppAddCardRouteImport.update({
+  id: '/add-card',
+  path: '/add-card',
+  getParentRoute: () => AppRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -30,50 +64,130 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/onboarding': typeof OnboardingRoute
+  '/': typeof PublicIndexRoute
+  '/add-card': typeof AppAddCardRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/settings': typeof AppSettingsRoute
+  '/study': typeof AppStudyRoute
+  '/onboarding': typeof PublicOnboardingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/onboarding': typeof OnboardingRoute
+  '/': typeof PublicIndexRoute
+  '/add-card': typeof AppAddCardRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/settings': typeof AppSettingsRoute
+  '/study': typeof AppStudyRoute
+  '/onboarding': typeof PublicOnboardingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/onboarding': typeof OnboardingRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
+  '/_app/add-card': typeof AppAddCardRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/study': typeof AppStudyRoute
+  '/_public/onboarding': typeof PublicOnboardingRoute
+  '/_public/': typeof PublicIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/onboarding' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/add-card'
+    | '/dashboard'
+    | '/settings'
+    | '/study'
+    | '/onboarding'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding' | '/api/auth/$'
-  id: '__root__' | '/' | '/onboarding' | '/api/auth/$'
+  to:
+    | '/'
+    | '/add-card'
+    | '/dashboard'
+    | '/settings'
+    | '/study'
+    | '/onboarding'
+    | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_public'
+    | '/_app/add-card'
+    | '/_app/dashboard'
+    | '/_app/settings'
+    | '/_app/study'
+    | '/_public/onboarding'
+    | '/_public/'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  OnboardingRoute: typeof OnboardingRoute
+  AppRoute: typeof AppRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/onboarding': {
+      id: '/_public/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof PublicOnboardingRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_app/study': {
+      id: '/_app/study'
+      path: '/study'
+      fullPath: '/study'
+      preLoaderRoute: typeof AppStudyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/add-card': {
+      id: '/_app/add-card'
+      path: '/add-card'
+      fullPath: '/add-card'
+      preLoaderRoute: typeof AppAddCardRouteImport
+      parentRoute: typeof AppRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -85,9 +199,38 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppRouteChildren {
+  AppAddCardRoute: typeof AppAddCardRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppStudyRoute: typeof AppStudyRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAddCardRoute: AppAddCardRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppStudyRoute: AppStudyRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface PublicRouteChildren {
+  PublicOnboardingRoute: typeof PublicOnboardingRoute
+  PublicIndexRoute: typeof PublicIndexRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicOnboardingRoute: PublicOnboardingRoute,
+  PublicIndexRoute: PublicIndexRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  OnboardingRoute: OnboardingRoute,
+  AppRoute: AppRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

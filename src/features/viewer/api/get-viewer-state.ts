@@ -2,17 +2,17 @@ import { createServerFn } from "@tanstack/react-start"
 import { getRequestHeaders } from "@tanstack/react-start/server"
 import { eq } from "drizzle-orm"
 
-import { auth } from "@/lib/server/auth"
-import { db } from "@/lib/server/db"
 import type {
   ViewerIdentity,
-  ViewerOnboardingState,
   ViewerPreferences,
-} from "@/routes/onboarding/-model/contracts"
+  ViewerState,
+} from "@/features/viewer/model/contracts"
 import {
   type UserPreferencesRecord,
   userPreferences,
-} from "@/routes/onboarding/-model/user-preferences-schema"
+} from "@/features/viewer/model/user-preferences-schema"
+import { auth } from "@/lib/server/auth"
+import { db } from "@/lib/server/db"
 
 function toViewerIdentity(user: {
   id: string
@@ -39,9 +39,9 @@ function toViewerPreferences(record: UserPreferencesRecord): ViewerPreferences {
   }
 }
 
-export const getViewerOnboardingState = createServerFn({
+export const getViewerState = createServerFn({
   method: "GET",
-}).handler(async (): Promise<ViewerOnboardingState> => {
+}).handler(async (): Promise<ViewerState> => {
   const session = await auth.api.getSession({
     headers: getRequestHeaders(),
   })

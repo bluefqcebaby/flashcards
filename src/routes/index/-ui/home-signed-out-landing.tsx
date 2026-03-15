@@ -42,16 +42,17 @@ export function HomeSignedOutLanding() {
   }
 
   return (
-    <main className="min-h-svh bg-background px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto grid w-full max-w-5xl gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]">
-        <Card>
+    <main className="relative min-h-svh overflow-hidden bg-background px-4 py-10 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(214,181,88,0.16),transparent_58%)]" />
+      <div className="mx-auto grid w-full max-w-6xl gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
+        <Card className="border-border/70 bg-card/90 shadow-2xl shadow-black/10">
           <CardHeader>
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="secondary">MVP onboarding</Badge>
+              <Badge variant="secondary">Dark app shell next</Badge>
               <Badge variant="outline">Google auth ready</Badge>
             </div>
             <CardTitle>
-              Learn new vocabulary with a clean language pair setup.
+              Learn new vocabulary with a calmer, darker workspace.
             </CardTitle>
             <CardDescription>
               Sign in, choose the language you are learning and your base
@@ -60,7 +61,7 @@ export function HomeSignedOutLanding() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="grid gap-3 sm:grid-cols-3">
-              <Card size="sm">
+              <Card className="border-border/60 bg-background/40" size="sm">
                 <CardHeader>
                   <CardTitle>1. Sign in</CardTitle>
                   <CardDescription>
@@ -68,7 +69,7 @@ export function HomeSignedOutLanding() {
                   </CardDescription>
                 </CardHeader>
               </Card>
-              <Card size="sm">
+              <Card className="border-border/60 bg-background/40" size="sm">
                 <CardHeader>
                   <CardTitle>2. Pick languages</CardTitle>
                   <CardDescription>
@@ -76,7 +77,7 @@ export function HomeSignedOutLanding() {
                   </CardDescription>
                 </CardHeader>
               </Card>
-              <Card size="sm">
+              <Card className="border-border/60 bg-background/40" size="sm">
                 <CardHeader>
                   <CardTitle>3. Start building</CardTitle>
                   <CardDescription>
@@ -106,7 +107,7 @@ export function HomeSignedOutLanding() {
           </CardFooter>
         </Card>
 
-        <Card>
+        <Card className="border-border/70 bg-card/80">
           <CardHeader>
             <CardTitle>Why the language pair matters</CardTitle>
             <CardDescription>
@@ -133,7 +134,7 @@ export function HomeSignedOutLanding() {
           </CardContent>
           <CardFooter>
             <Button disabled={true} variant="ghost">
-              Deck creation follows next
+              Dashboard shell follows next
               <IconArrowRight data-icon="inline-end" />
             </Button>
           </CardFooter>

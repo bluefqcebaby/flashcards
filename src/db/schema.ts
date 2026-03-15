@@ -1,3 +1,3 @@
-export * from "@/routes/onboarding/-model/user-preferences-schema"
+export * from "@/features/viewer/model/user-preferences-schema"
 
 export * from "./auth-schema"

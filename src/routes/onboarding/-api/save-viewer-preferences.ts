@@ -2,17 +2,17 @@ import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/react-start"
 import { getRequestHeaders } from "@tanstack/react-start/server"
 
-import { auth } from "@/lib/server/auth"
-import { db } from "@/lib/server/db"
 import {
   type SaveViewerPreferencesInput,
   saveViewerPreferencesInputSchema,
-} from "@/routes/onboarding/-model/contracts"
+} from "@/features/viewer/model/contracts"
+import { userPreferences } from "@/features/viewer/model/user-preferences-schema"
+import { auth } from "@/lib/server/auth"
+import { db } from "@/lib/server/db"
 import {
   getLanguageOption,
   isValidLanguageCode,
 } from "@/routes/onboarding/-model/languages"
-import { userPreferences } from "@/routes/onboarding/-model/user-preferences-schema"
 
 export const saveViewerPreferences = createServerFn({
   method: "POST",
@@ -68,5 +68,5 @@ export const saveViewerPreferences = createServerFn({
         },
       })
 
-    throw redirect({ to: "/" })
+    throw redirect({ to: "/dashboard" })
   })

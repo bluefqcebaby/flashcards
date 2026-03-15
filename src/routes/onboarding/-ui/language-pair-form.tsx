@@ -31,11 +31,11 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
-import { saveViewerPreferences } from "@/routes/onboarding/-api/save-viewer-preferences"
 import {
   formatLanguageLabel,
   type ViewerIdentity,
-} from "@/routes/onboarding/-model/contracts"
+} from "@/features/viewer/model/contracts"
+import { saveViewerPreferences } from "@/routes/onboarding/-api/save-viewer-preferences"
 import {
   getLanguageOption,
   getLanguageSearchLabel,
@@ -73,7 +73,7 @@ export function LanguagePairForm({ user }: LanguagePairFormProps) {
   })
 
   return (
-    <Card className="w-full max-w-xl">
+    <Card className="w-full max-w-xl border-border/70 bg-card/90 shadow-2xl shadow-black/10">
       <CardHeader>
         <CardTitle>Set your language pair</CardTitle>
         <CardDescription>
@@ -132,9 +132,9 @@ export function LanguagePairForm({ user }: LanguagePairFormProps) {
                         <ComboboxList>
                           {(language) => (
                             <ComboboxItem key={language.code} value={language}>
-                              <div className="flex min-w-0 flex-col">
+                              <div className="flex min-w-0 flex-col gap-0.5">
                                 <span>{language.name}</span>
-                                <span className="text-muted-foreground">
+                                <span className="text-xs text-muted-foreground">
                                   {formatLanguageLabel(language)}
                                 </span>
                               </div>
@@ -195,9 +195,9 @@ export function LanguagePairForm({ user }: LanguagePairFormProps) {
                         <ComboboxList>
                           {(language) => (
                             <ComboboxItem key={language.code} value={language}>
-                              <div className="flex min-w-0 flex-col">
+                              <div className="flex min-w-0 flex-col gap-0.5">
                                 <span>{language.name}</span>
-                                <span className="text-muted-foreground">
+                                <span className="text-xs text-muted-foreground">
                                   {formatLanguageLabel(language)}
                                 </span>
                               </div>
@@ -221,7 +221,7 @@ export function LanguagePairForm({ user }: LanguagePairFormProps) {
         </form>
 
         {submitError ? (
-          <Alert className="mt-6" variant="destructive">
+          <Alert className="mt-6 border-destructive/40" variant="destructive">
             <IconSparkles />
             <AlertTitle>Could not save your onboarding</AlertTitle>
             <AlertDescription>{submitError}</AlertDescription>
@@ -236,6 +236,7 @@ export function LanguagePairForm({ user }: LanguagePairFormProps) {
             <Button
               disabled={!canSubmit || isSubmitting}
               form="language-pair-form"
+              size="lg"
               type="submit"
             >
               {isSubmitting ? (

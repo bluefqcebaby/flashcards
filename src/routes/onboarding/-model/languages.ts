@@ -1,7 +1,7 @@
 import {
   formatLanguageLabel,
   type LanguageOption,
-} from "@/routes/onboarding/-model/contracts"
+} from "@/features/viewer/model/contracts"
 
 export const languageCatalog: LanguageOption[] = [
   { code: "en", name: "English", nativeName: "English" },

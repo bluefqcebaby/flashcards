@@ -1,13 +1,17 @@
 import { createFileRoute, redirect } from "@tanstack/react-router"
 
-import { getViewerOnboardingState } from "@/routes/onboarding/-api/get-viewer-onboarding-state"
+import { getViewerState } from "@/features/viewer/api/get-viewer-state"
 import { OnboardingPage } from "@/routes/onboarding/-ui/onboarding-page"
 
-export const Route = createFileRoute("/onboarding")({
+export const Route = createFileRoute("/_public/onboarding")({
   beforeLoad: async () => {
-    const viewerState = await getViewerOnboardingState()
+    const viewerState = await getViewerState()
 
-    if (viewerState.status !== "needs-onboarding") {
+    if (viewerState.status === "ready") {
+      throw redirect({ to: "/dashboard" })
+    }
+
+    if (viewerState.status === "signed-out") {
       throw redirect({ to: "/" })
     }
 
