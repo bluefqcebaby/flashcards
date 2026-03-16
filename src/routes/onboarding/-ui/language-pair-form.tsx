@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { IconArrowRight, IconLanguage, IconSparkles } from "@tabler/icons-react"
 import { useForm } from "@tanstack/react-form"

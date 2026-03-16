@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { IconLogout, IconSparkles } from "@tabler/icons-react"
 import { Link, useRouter, useRouterState } from "@tanstack/react-router"
@@ -12,7 +10,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -21,23 +18,16 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Spinner } from "@/components/ui/spinner"
-import type {
-  ViewerIdentity,
-  ViewerPreferences,
-} from "@/features/viewer/model/contracts"
-import {
-  formatLanguagePair,
-  getInitials,
-} from "@/features/viewer/model/contracts"
+import type { ViewerIdentity } from "@/features/viewer/model/contracts"
+import { getInitials } from "@/features/viewer/model/contracts"
 import { authClient } from "@/lib/auth-client"
 import { appNavItems } from "@/routes/_app/-model/app-nav"
 
 type AppSidebarProps = {
-  preferences: ViewerPreferences
   user: ViewerIdentity
 }
 
-export function AppSidebar({ preferences, user }: AppSidebarProps) {
+export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
@@ -56,33 +46,20 @@ export function AppSidebar({ preferences, user }: AppSidebarProps) {
   }
 
   return (
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar collapsible="offcanvas" variant="sidebar">
       <SidebarHeader className="gap-4 px-4 py-5">
         <div className="flex items-center gap-3">
           <div className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
             <IconSparkles />
           </div>
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <p className="text-sm font-semibold">Flashards</p>
-            <p className="truncate text-xs text-sidebar-foreground/70">
-              Learn with AI-made examples
-            </p>
+            <p className="text-sm font-semibold">Kano</p>
           </div>
-        </div>
-
-        <div className="rounded-2xl border border-sidebar-border/80 bg-sidebar-accent/60 p-3 group-data-[collapsible=icon]:hidden">
-          <p className="text-xs font-medium tracking-[0.2em] text-sidebar-foreground/55 uppercase">
-            Active pair
-          </p>
-          <p className="mt-2 text-sm font-medium">
-            {formatLanguagePair(preferences)}
-          </p>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup className="px-3">
-          <SidebarGroupLabel>Navigate</SidebarGroupLabel>
           <SidebarMenu>
             {appNavItems.map((item) => {
               const isActive = pathname === item.to

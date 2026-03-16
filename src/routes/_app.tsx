@@ -4,7 +4,7 @@ import { getViewerState } from "@/features/viewer/api/get-viewer-state"
 import { AppShell } from "@/routes/_app/-ui/app-shell"
 
 export const Route = createFileRoute("/_app")({
-  beforeLoad: async () => {
+  loader: async () => {
     const viewerState = await getViewerState()
 
     if (viewerState.status === "signed-out") {
@@ -17,14 +17,15 @@ export const Route = createFileRoute("/_app")({
 
     return { viewerState }
   },
+  staleTime: 60_000,
   component: AppRoute,
 })
 
 function AppRoute() {
-  const { viewerState } = Route.useRouteContext()
+  const { viewerState } = Route.useLoaderData()
 
   return (
-    <AppShell preferences={viewerState.preferences} user={viewerState.user}>
+    <AppShell user={viewerState.user}>
       <Outlet />
     </AppShell>
   )
