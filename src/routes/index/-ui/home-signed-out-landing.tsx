@@ -1,19 +1,12 @@
 import { useState } from "react"
-import {
-  IconArrowRight,
-  IconBrandGoogle,
-  IconLanguage,
-  IconSparkles,
-} from "@tabler/icons-react"
+import { IconBrandGoogle, IconSparkles } from "@tabler/icons-react"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -42,104 +35,46 @@ export function HomeSignedOutLanding() {
   }
 
   return (
-    <main className="relative min-h-svh overflow-hidden bg-background px-4 py-10 sm:px-6 lg:px-8">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(214,181,88,0.16),transparent_58%)]" />
-      <div className="mx-auto grid w-full max-w-6xl gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
-        <Card className="border-border/70 bg-card/90 shadow-2xl shadow-black/10">
-          <CardHeader>
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="secondary">Dark app shell next</Badge>
-              <Badge variant="outline">Google auth ready</Badge>
-            </div>
-            <CardTitle>
-              Learn new vocabulary with a calmer, darker workspace.
-            </CardTitle>
-            <CardDescription>
-              Sign in, choose the language you are learning and your base
-              language, then we can build the first deck flow on top of that.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <div className="grid gap-3 sm:grid-cols-3">
-              <Card className="border-border/60 bg-background/40" size="sm">
-                <CardHeader>
-                  <CardTitle>1. Sign in</CardTitle>
-                  <CardDescription>
-                    Use Google to create your learner profile.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-              <Card className="border-border/60 bg-background/40" size="sm">
-                <CardHeader>
-                  <CardTitle>2. Pick languages</CardTitle>
-                  <CardDescription>
-                    Set your learning language and your base language.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-              <Card className="border-border/60 bg-background/40" size="sm">
-                <CardHeader>
-                  <CardTitle>3. Start building</CardTitle>
-                  <CardDescription>
-                    Use that pair for translations, explanations, and cards.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
+    <main className="relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-10 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(214,181,88,0.18),transparent_34%),radial-gradient(circle_at_bottom,rgba(255,255,255,0.05),transparent_32%)]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
 
-            {authError ? (
-              <Alert variant="destructive">
-                <IconSparkles />
-                <AlertTitle>Sign-in failed</AlertTitle>
-                <AlertDescription>{authError}</AlertDescription>
-              </Alert>
-            ) : null}
-          </CardContent>
-          <CardFooter>
-            <Button disabled={isSigningIn} onClick={handleSignIn}>
-              {isSigningIn ? (
-                <Spinner data-icon="inline-start" />
-              ) : (
-                <IconBrandGoogle data-icon="inline-start" />
-              )}
-              Continue with Google
-            </Button>
-          </CardFooter>
-        </Card>
+      <Card className="relative w-full max-w-xl overflow-hidden border-white/10 bg-card/85 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
 
-        <Card className="border-border/70 bg-card/80">
-          <CardHeader>
-            <CardTitle>Why the language pair matters</CardTitle>
-            <CardDescription>
-              This tiny setup step gives the app enough context to generate a
-              useful learning experience later.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <div className="flex items-start gap-3">
-              <Badge variant="outline">
-                <IconLanguage data-icon="inline-start" />
-                Learning language
-              </Badge>
-              <p className="text-sm text-muted-foreground">
-                The language of words, phrases, and examples you want to study.
-              </p>
-            </div>
-            <div className="flex items-start gap-3">
-              <Badge variant="outline">Base language</Badge>
-              <p className="text-sm text-muted-foreground">
-                The language used for translations and explanations in the MVP.
-              </p>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button disabled={true} variant="ghost">
-              Dashboard shell follows next
-              <IconArrowRight data-icon="inline-end" />
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+        <CardHeader className="space-y-4 px-6 pt-10 pb-6 text-center sm:px-10 sm:pt-12">
+          <CardTitle className="text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-4xl">
+            Log in and let&apos;s get you studying.
+          </CardTitle>
+          <CardDescription className="mx-auto max-w-md text-base leading-7 text-muted-foreground text-pretty sm:text-lg">
+            One tap with Google, then pick your languages and start making
+            cards.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="flex flex-col gap-4 px-6 pb-8 sm:px-10 sm:pb-10">
+          <Button
+            className="h-14 w-full rounded-2xl text-base font-semibold shadow-lg shadow-primary/15 transition-transform duration-200 hover:-translate-y-0.5"
+            disabled={isSigningIn}
+            onClick={handleSignIn}
+          >
+            {isSigningIn ? (
+              <Spinner data-icon="inline-start" />
+            ) : (
+              <IconBrandGoogle data-icon="inline-start" />
+            )}
+            Continue with Google
+          </Button>
+
+          {authError ? (
+            <Alert variant="destructive">
+              <IconSparkles />
+              <AlertTitle>Sign-in failed</AlertTitle>
+              <AlertDescription>{authError}</AlertDescription>
+            </Alert>
+          ) : null}
+        </CardContent>
+      </Card>
     </main>
   )
 }
