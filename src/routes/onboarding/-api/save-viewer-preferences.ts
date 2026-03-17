@@ -1,14 +1,10 @@
 import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/react-start"
-import { getRequestHeaders } from "@tanstack/react-start/server"
 
-import {
-  type SaveViewerPreferencesInput,
-  saveViewerPreferencesInputSchema,
-} from "@/features/viewer/model/contracts"
+import { saveViewerPreferencesInputSchema } from "@/features/viewer/model/contracts"
 import { userPreferences } from "@/features/viewer/model/user-preferences-schema"
-import { auth } from "@/lib/server/auth"
 import { db } from "@/lib/server/db"
+import { authMiddleware } from "@/lib/server/server-fn-middleware"
 import {
   getLanguageOption,
   isValidLanguageCode,
@@ -17,6 +13,7 @@ import {
 export const saveViewerPreferences = createServerFn({
   method: "POST",
 })
+  .middleware([authMiddleware])
   .inputValidator(
     saveViewerPreferencesInputSchema.refine(
       (value) =>
@@ -27,14 +24,8 @@ export const saveViewerPreferences = createServerFn({
       }
     )
   )
-  .handler(async ({ data }: { data: SaveViewerPreferencesInput }) => {
-    const session = await auth.api.getSession({
-      headers: getRequestHeaders(),
-    })
-
-    if (!session) {
-      throw redirect({ to: "/" })
-    }
+  .handler(async ({ context, data }) => {
+    const { session } = context
 
     const learningLanguage = getLanguageOption(data.learningLanguageCode)
     const baseLanguage = getLanguageOption(data.baseLanguageCode)

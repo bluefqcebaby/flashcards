@@ -15,6 +15,13 @@
       "when": 1773577589797,
       "tag": "0001_tearful_komodo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773648783229,
+      "tag": "0002_gray_pet_avengers",
+      "breakpoints": true
     }
   ]
 }

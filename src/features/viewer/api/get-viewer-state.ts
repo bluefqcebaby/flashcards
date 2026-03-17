@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start"
-import { getRequestHeaders } from "@tanstack/react-start/server"
 import { eq } from "drizzle-orm"
 
 import type {
@@ -11,8 +10,8 @@ import {
   type UserPreferencesRecord,
   userPreferences,
 } from "@/features/viewer/model/user-preferences-schema"
-import { auth } from "@/lib/server/auth"
 import { db } from "@/lib/server/db"
+import { sessionMiddleware } from "@/lib/server/server-fn-middleware"
 
 function toViewerIdentity(user: {
   id: string
@@ -41,31 +40,31 @@ function toViewerPreferences(record: UserPreferencesRecord): ViewerPreferences {
 
 export const getViewerState = createServerFn({
   method: "GET",
-}).handler(async (): Promise<ViewerState> => {
-  const session = await auth.api.getSession({
-    headers: getRequestHeaders(),
-  })
-
-  if (!session) {
-    return { status: "signed-out" }
-  }
-
-  const [preferences] = await db
-    .select()
-    .from(userPreferences)
-    .where(eq(userPreferences.userId, session.user.id))
-    .limit(1)
-
-  if (!preferences) {
-    return {
-      status: "needs-onboarding",
-      user: toViewerIdentity(session.user),
-    }
-  }
-
-  return {
-    status: "ready",
-    user: toViewerIdentity(session.user),
-    preferences: toViewerPreferences(preferences),
-  }
 })
+  .middleware([sessionMiddleware])
+  .handler(async ({ context }): Promise<ViewerState> => {
+    const { session } = context
+
+    if (!session) {
+      return { status: "signed-out" }
+    }
+
+    const [preferences] = await db
+      .select()
+      .from(userPreferences)
+      .where(eq(userPreferences.userId, session.user.id))
+      .limit(1)
+
+    if (!preferences) {
+      return {
+        status: "needs-onboarding",
+        user: toViewerIdentity(session.user),
+      }
+    }
+
+    return {
+      status: "ready",
+      user: toViewerIdentity(session.user),
+      preferences: toViewerPreferences(preferences),
+    }
+  })
