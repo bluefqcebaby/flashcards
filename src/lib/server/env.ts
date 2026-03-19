@@ -26,5 +26,5 @@ export const env = {
   GOOGLE_CLIENT_ID: getRequiredEnvVar("GOOGLE_CLIENT_ID"),
   GOOGLE_CLIENT_SECRET: getRequiredEnvVar("GOOGLE_CLIENT_SECRET"),
   OPENAI_API_KEY: getRequiredEnvVar("OPENAI_API_KEY"),
-  OPENAI_MODEL: process.env.OPENAI_MODEL?.trim() || "gpt-5-mini",
+  OPENAI_MODEL: process.env.OPENAI_MODEL?.trim() || "gpt-4.1-mini",
 } as const
