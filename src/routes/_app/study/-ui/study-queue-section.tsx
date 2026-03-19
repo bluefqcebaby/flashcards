@@ -34,10 +34,14 @@ import type {
   RateStudyCardInput,
   StudyRating,
 } from "@/features/cards/model/contracts"
+import type { FlashcardRecord } from "@/features/cards/model/flashcard-schema"
 import { rateStudyCard } from "@/routes/_app/study/-api/rate-study-card"
-import type { StudyRouteData } from "@/routes/_app/study/-model/study-types"
 
-type StudyQueueSectionProps = StudyRouteData
+type StudyQueueSectionProps = {
+  currentCard: FlashcardRecord | null
+  dueCardCount: number
+  totalCardCount: number
+}
 
 const ratingOptions: Array<{
   value: StudyRating

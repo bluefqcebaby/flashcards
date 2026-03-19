@@ -31,3 +31,11 @@ export async function getTotalStudyCardCount(userId: string) {
 
   return cards.length
 }
+
+export async function getRandomStudyCards(userId: string) {
+  return db
+    .select()
+    .from(flashcards)
+    .where(eq(flashcards.userId, userId))
+    .orderBy(asc(flashcards.createdAt), asc(flashcards.id))
+}

@@ -4,6 +4,7 @@ import { authMiddleware } from "@/lib/server/server-fn-middleware"
 import {
   getCurrentStudyCard,
   getDueStudyCardCount,
+  getRandomStudyCards,
   getTotalStudyCardCount,
 } from "@/routes/_app/study/-api/queries"
 import type { StudyRouteData } from "@/routes/_app/study/-model/study-types"
@@ -16,15 +17,18 @@ export const getStudyRouteData = createServerFn({
     const { session } = context
     const now = new Date()
 
-    const [currentCard, dueCardCount, totalCardCount] = await Promise.all([
-      getCurrentStudyCard(session.user.id, now),
-      getDueStudyCardCount(session.user.id, now),
-      getTotalStudyCardCount(session.user.id),
-    ])
+    const [currentCard, dueCardCount, totalCardCount, randomCards] =
+      await Promise.all([
+        getCurrentStudyCard(session.user.id, now),
+        getDueStudyCardCount(session.user.id, now),
+        getTotalStudyCardCount(session.user.id),
+        getRandomStudyCards(session.user.id),
+      ])
 
     return {
       currentCard,
       dueCardCount,
       totalCardCount,
+      randomCards,
     }
   })

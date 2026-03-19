@@ -5,6 +5,7 @@ export type StudyRouteData = {
   currentCard: FlashcardRecord | null
   dueCardCount: number
   totalCardCount: number
+  randomCards: FlashcardRecord[]
 }
 
 export type StudyCardFormValues = {
