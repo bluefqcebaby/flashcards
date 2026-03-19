@@ -4,6 +4,7 @@ const REQUIRED_ENV_VARS = [
   "DATABASE_URL",
   "GOOGLE_CLIENT_ID",
   "GOOGLE_CLIENT_SECRET",
+  "OPENAI_API_KEY",
 ] as const
 
 type RequiredEnvVar = (typeof REQUIRED_ENV_VARS)[number]
@@ -24,4 +25,6 @@ export const env = {
   DATABASE_URL: getRequiredEnvVar("DATABASE_URL"),
   GOOGLE_CLIENT_ID: getRequiredEnvVar("GOOGLE_CLIENT_ID"),
   GOOGLE_CLIENT_SECRET: getRequiredEnvVar("GOOGLE_CLIENT_SECRET"),
+  OPENAI_API_KEY: getRequiredEnvVar("OPENAI_API_KEY"),
+  OPENAI_MODEL: process.env.OPENAI_MODEL?.trim() || "gpt-5-mini",
 } as const
