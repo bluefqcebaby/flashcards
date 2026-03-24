@@ -122,12 +122,6 @@ export const StudyCreateCardSection = () => {
               name="pronunciation"
               placeholder="keh-roh ah-pren-dehr"
             />
-            <StudyInputField
-              form={form}
-              label="Part of speech"
-              name="partOfSpeech"
-              placeholder="verb phrase"
-            />
             <StudyTextareaField
               form={form}
               label="Notes"
@@ -199,7 +193,6 @@ const useStudyCardForm = () => {
               ],
               notes: value.notes,
               pronunciation: value.pronunciation,
-              partOfSpeech: value.partOfSpeech,
             },
           })
 
@@ -266,7 +259,7 @@ const StudyExampleFields = ({
 type StudyInputFieldProps = {
   form: StudyCardFormApi
   label: string
-  name: "expression" | "translation" | "pronunciation" | "partOfSpeech"
+  name: "expression" | "translation" | "pronunciation"
   placeholder: string
   requiredMessage?: string
 }

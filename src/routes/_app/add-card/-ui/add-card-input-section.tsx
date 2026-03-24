@@ -11,77 +11,128 @@ import {
 } from "@/components/ui/card"
 import {
   Field,
-  FieldDescription,
   FieldError,
+  FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import type { ViewerPreferences } from "@/features/viewer/model/contracts"
-import { formatLanguagePair } from "@/features/viewer/model/contracts"
+import type { AddCardInputMode } from "@/routes/_app/add-card/-model/add-card-types"
 import type { UseAddCardFlowResult } from "@/routes/_app/add-card/-ui/use-add-card-flow"
 
 type AddCardInputSectionProps = {
   clearFeedbackMessages: UseAddCardFlowResult["clearFeedbackMessages"]
   form: UseAddCardFlowResult["form"]
-  isGenerating: boolean
-  isSaving: boolean
+  isCreatingDraft: boolean
   preferences: ViewerPreferences
+}
+
+type InputModeCopy = {
+  fieldLabel: string
+  placeholder: string
+}
+
+function getInputModeCopy(
+  inputMode: AddCardInputMode,
+  preferences: ViewerPreferences
+): InputModeCopy {
+  if (inputMode === "base") {
+    return {
+      fieldLabel: "Meaning in any language",
+      placeholder: "shopping bag, kassir, parque, receipt, park",
+    }
+  }
+
+  return {
+    fieldLabel: `Word or phrase in ${preferences.learningLanguageName}`,
+    placeholder: "parki, gamarjoba, madloba",
+  }
 }
 
 export function AddCardInputSection({
   clearFeedbackMessages,
   form,
-  isGenerating,
-  isSaving,
+  isCreatingDraft,
   preferences,
 }: AddCardInputSectionProps) {
+  const { inputMode } = form.state.values
+  const copy = getInputModeCopy(inputMode, preferences)
+
   return (
     <Card className="border-primary/15 bg-card/90 shadow-lg shadow-black/10">
-      <CardHeader className="gap-3">
+      <CardHeader className="gap-4">
         <div className="flex flex-wrap items-center gap-3">
           <Badge variant="secondary">AI creation</Badge>
-          <span className="text-sm text-muted-foreground">
-            {formatLanguagePair(preferences)}
-          </span>
         </div>
-        <CardTitle className="text-2xl">
-          Add one expression, let AI build the card
-        </CardTitle>
-        <CardDescription>
-          Enter one word or phrase. The app will normalize it, translate it, add
-          pronunciation, and prepare two short examples before you save.
-        </CardDescription>
+        <CardTitle className="text-2xl">New draft</CardTitle>
+        <CardDescription>Add a word and keep going.</CardDescription>
       </CardHeader>
 
       <CardContent>
         <form
-          className="grid gap-4"
+          className="flex flex-col gap-6"
           onSubmit={(event) => {
             event.preventDefault()
             event.stopPropagation()
             void form.handleSubmit()
           }}
         >
-          <form.Field
-            name="expression"
-            validators={{
-              onSubmit: ({ value }) =>
-                value.trim()
-                  ? undefined
-                  : "Enter a word or phrase to generate a card.",
-            }}
-          >
-            {(field) => {
-              const showError =
-                (field.state.meta.isTouched ||
-                  form.state.submissionAttempts > 0) &&
-                field.state.meta.errors.length > 0
+          <FieldGroup>
+            <FieldSet>
+              <FieldLegend>Input</FieldLegend>
+              <form.Field name="inputMode">
+                {(field) => (
+                  <ToggleGroup
+                    aria-label="Choose how to search for the draft"
+                    className="w-full"
+                    multiple={false}
+                    onValueChange={(nextValue) => {
+                      const [nextMode] = nextValue
 
-              return (
-                <Field data-invalid={showError || undefined}>
-                  <FieldLabel htmlFor={field.name}>Word or phrase</FieldLabel>
-                  <div className="flex flex-col gap-3 sm:flex-row">
+                      if (!nextMode) {
+                        return
+                      }
+
+                      field.handleChange(nextMode as AddCardInputMode)
+                      clearFeedbackMessages()
+                    }}
+                    value={[field.state.value]}
+                  >
+                    <ToggleGroupItem className="flex-1" value="learning">
+                      {preferences.learningLanguageName}
+                    </ToggleGroupItem>
+                    <ToggleGroupItem className="flex-1" value="base">
+                      Any language
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                )}
+              </form.Field>
+            </FieldSet>
+
+            <form.Field
+              name="expression"
+              validators={{
+                onSubmit: ({ value }) =>
+                  value.trim()
+                    ? undefined
+                    : "Enter a word or phrase to generate a card.",
+              }}
+            >
+              {(field) => {
+                const showError =
+                  (field.state.meta.isTouched ||
+                    form.state.submissionAttempts > 0) &&
+                  field.state.meta.errors.length > 0
+
+                return (
+                  <Field data-invalid={showError || undefined}>
+                    <FieldLabel htmlFor={field.name}>
+                      {copy.fieldLabel}
+                    </FieldLabel>
                     <Input
                       aria-invalid={showError || undefined}
                       className="h-12 text-base"
@@ -92,33 +143,30 @@ export function AddCardInputSection({
                         field.handleChange(event.target.value)
                         clearFeedbackMessages()
                       }}
-                      placeholder="გამარჯობა, quiero aprender, bonjour"
+                      placeholder={copy.placeholder}
                       value={field.state.value}
                     />
-                    <Button
-                      className="h-12 px-6"
-                      disabled={isGenerating || isSaving}
-                      type="submit"
-                    >
-                      {isGenerating ? (
-                        <Spinner data-icon="inline-start" />
-                      ) : (
-                        <IconSparkles data-icon="inline-start" />
-                      )}
-                      Generate
-                    </Button>
-                  </div>
-                  <FieldDescription>
-                    Hidden context: {preferences.learningLanguageName} into{" "}
-                    {preferences.baseLanguageName}.
-                  </FieldDescription>
-                  {showError ? (
-                    <FieldError>{field.state.meta.errors[0]}</FieldError>
-                  ) : null}
-                </Field>
-              )
-            }}
-          </form.Field>
+                    {showError ? (
+                      <FieldError>{field.state.meta.errors[0]}</FieldError>
+                    ) : null}
+                  </Field>
+                )
+              }}
+            </form.Field>
+          </FieldGroup>
+
+          <Button
+            className="h-12 w-full justify-center"
+            disabled={isCreatingDraft}
+            type="submit"
+          >
+            {isCreatingDraft ? (
+              <Spinner data-icon="inline-start" />
+            ) : (
+              <IconSparkles data-icon="inline-start" />
+            )}
+            Add draft
+          </Button>
         </form>
       </CardContent>
     </Card>

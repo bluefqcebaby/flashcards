@@ -1,0 +1,6 @@
+CREATE TYPE "public"."flashcard_draft_input_mode" AS ENUM('learning', 'base');--> statement-breakpoint
+CREATE TYPE "public"."flashcard_draft_status" AS ENUM('pending', 'ready', 'failed', 'saved');--> statement-breakpoint
+ALTER TABLE "flashcard_drafts" ALTER COLUMN "status" SET DATA TYPE "public"."flashcard_draft_status" USING "status"::"public"."flashcard_draft_status";--> statement-breakpoint
+ALTER TABLE "flashcard_drafts" ALTER COLUMN "input_mode" SET DATA TYPE "public"."flashcard_draft_input_mode" USING "input_mode"::"public"."flashcard_draft_input_mode";--> statement-breakpoint
+ALTER TABLE "flashcard_drafts" ADD CONSTRAINT "flashcard_drafts_generated_content_check" CHECK (("flashcard_drafts"."status" not in ('ready', 'saved')) or ("flashcard_drafts"."expression" is not null and "flashcard_drafts"."expression_type" is not null and "flashcard_drafts"."translation" is not null and "flashcard_drafts"."examples" is not null));--> statement-breakpoint
+ALTER TABLE "flashcard_drafts" ADD CONSTRAINT "flashcard_drafts_failed_error_check" CHECK (("flashcard_drafts"."status" <> 'failed') or "flashcard_drafts"."error_message" is not null);
