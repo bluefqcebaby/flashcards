@@ -3,22 +3,31 @@ import { IconCheck } from "@tabler/icons-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 type AddCardStatusSectionProps = {
+  dismissError: string | null
   generationError: string | null
   saveError: string | null
   successMessage: string | null
 }
 
 export function AddCardStatusSection({
+  dismissError,
   generationError,
   saveError,
   successMessage,
 }: AddCardStatusSectionProps) {
-  if (!(generationError || saveError || successMessage)) {
+  if (!(dismissError || generationError || saveError || successMessage)) {
     return null
   }
 
   return (
     <div className="grid gap-4">
+      {dismissError ? (
+        <Alert variant="destructive">
+          <AlertTitle>Dismiss failed</AlertTitle>
+          <AlertDescription>{dismissError}</AlertDescription>
+        </Alert>
+      ) : null}
+
       {generationError ? (
         <Alert variant="destructive">
           <AlertTitle>Generation failed</AlertTitle>

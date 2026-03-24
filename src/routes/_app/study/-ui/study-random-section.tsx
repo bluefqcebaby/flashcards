@@ -135,9 +135,6 @@ const RandomStudyCardView = ({
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-2">
         <Badge>{card.expressionType}</Badge>
-        {card.partOfSpeech ? (
-          <Badge variant="outline">{card.partOfSpeech}</Badge>
-        ) : null}
         {card.pronunciation ? (
           <Badge variant="outline">{card.pronunciation}</Badge>
         ) : null}

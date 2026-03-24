@@ -14,7 +14,6 @@ export async function saveFlashcard({
   examples,
   notes,
   pronunciation,
-  partOfSpeech,
 }: SaveFlashcardInput) {
   const now = new Date()
   const [savedCard] = await db
@@ -28,7 +27,6 @@ export async function saveFlashcard({
       examples,
       notes: notes?.trim() || null,
       pronunciation: pronunciation?.trim() || null,
-      partOfSpeech: partOfSpeech?.trim() || null,
       dueAt: now,
       lastReviewedAt: null,
       reviewCount: 0,

@@ -31,7 +31,6 @@ export type Flashcard = {
   examples: FlashcardExample[]
   notes: string | null
   pronunciation: string | null
-  partOfSpeech: string | null
   dueAt: Date
   lastReviewedAt: Date | null
   reviewCount: number
@@ -52,7 +51,6 @@ export const createFlashcardInputSchema = z.object({
   examples: flashcardExamplesSchema,
   notes: z.string().trim().optional(),
   pronunciation: z.string().trim().optional(),
-  partOfSpeech: z.string().trim().optional(),
 })
 
 export type CreateFlashcardInput = z.infer<typeof createFlashcardInputSchema>

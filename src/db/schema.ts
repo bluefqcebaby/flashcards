@@ -1,3 +1,4 @@
+export * from "@/features/cards/model/flashcard-draft-schema"
 export * from "@/features/cards/model/flashcard-schema"
 export * from "@/features/viewer/model/user-preferences-schema"
 

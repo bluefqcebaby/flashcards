@@ -18,7 +18,6 @@ export type StudyCardFormValues = {
   exampleTwoBase: string
   notes: string
   pronunciation: string
-  partOfSpeech: string
 }
 
 export const studyCardFormDefaults: StudyCardFormValues = {
@@ -31,7 +30,6 @@ export const studyCardFormDefaults: StudyCardFormValues = {
   exampleTwoBase: "",
   notes: "",
   pronunciation: "",
-  partOfSpeech: "",
 }
 
 export const expressionTypeOptions: Array<{

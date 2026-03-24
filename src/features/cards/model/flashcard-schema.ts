@@ -28,7 +28,6 @@ export const flashcards = pgTable(
     examples: jsonb("examples").$type<FlashcardExample[]>().notNull(),
     notes: text("notes"),
     pronunciation: text("pronunciation"),
-    partOfSpeech: text("part_of_speech"),
     dueAt: timestamp("due_at").notNull(),
     lastReviewedAt: timestamp("last_reviewed_at"),
     reviewCount: integer("review_count").default(0).notNull(),
