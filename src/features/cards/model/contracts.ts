@@ -82,3 +82,9 @@ export const deleteFlashcardInputSchema = z.object({
 })
 
 export type DeleteFlashcardInput = z.infer<typeof deleteFlashcardInputSchema>
+
+export const deleteFlashcardsInputSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1, "Select at least one card."),
+})
+
+export type DeleteFlashcardsInput = z.infer<typeof deleteFlashcardsInputSchema>

@@ -1,10 +1,9 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   IconAlertCircle,
   IconArrowLeft,
   IconCards,
   IconCheck,
-  IconEye,
   IconFlame,
   IconReload,
 } from "@tabler/icons-react"
@@ -28,6 +27,47 @@ import type { RateStudyCardInput } from "@/features/cards/model/contracts"
 import type { FlashcardRecord } from "@/features/cards/model/flashcard-schema"
 import { getReviewData } from "@/routes/_app/study/-api/get-review-data"
 import { rateStudyCard } from "@/routes/_app/study/-api/rate-study-card"
+import { StudyFlashcard } from "@/routes/_app/study/-ui/study-flashcard"
+
+// ─── Rating config ───────────────────────────────────────────────────────────
+
+type Rating = "again" | "hard" | "good"
+
+const RATINGS: {
+  value: Rating
+  label: string
+  shortcut: string
+  variant: "destructive" | "outline" | "default"
+  icon: React.ReactNode
+}[] = [
+  {
+    value: "again",
+    label: "Again",
+    shortcut: "1",
+    variant: "destructive",
+    icon: <IconReload className="size-5" />,
+  },
+  {
+    value: "hard",
+    label: "Hard",
+    shortcut: "2",
+    variant: "outline",
+    icon: <IconReload className="size-5" />,
+  },
+  {
+    value: "good",
+    label: "Good",
+    shortcut: "3",
+    variant: "default",
+    icon: <IconCheck className="size-5" />,
+  },
+]
+
+const ratingKeyMap: Record<string, Rating> = Object.fromEntries(
+  RATINGS.map((r) => [r.shortcut, r.value])
+) as Record<string, Rating>
+
+// ─── Page ────────────────────────────────────────────────────────────────────
 
 const ReviewPage = () => {
   const { currentCard, dueCardCount, totalCardCount } = Route.useLoaderData()
@@ -61,6 +101,8 @@ const ReviewPage = () => {
   )
 }
 
+// ─── Review Card ─────────────────────────────────────────────────────────────
+
 type ReviewCardProps = {
   card: FlashcardRecord
   dueCardCount: number
@@ -90,164 +132,141 @@ const ReviewCard = ({ card, dueCardCount }: ReviewCardProps) => {
     },
   })
 
+  const rate = useCallback(
+    (rating: Rating) => {
+      if (form.state.isSubmitting) return
+      form.setFieldValue("rating", rating)
+      void form.handleSubmit()
+    },
+    [form]
+  )
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (isFormElement(e.target as HTMLElement)) return
+
+      if (e.key === " ") {
+        e.preventDefault()
+        handleSpaceKey(isRevealed, setIsRevealed, rate)
+        return
+      }
+
+      handleNumberKey(e.key, rate)
+    }
+
+    document.addEventListener("keydown", handler)
+    return () => document.removeEventListener("keydown", handler)
+  }, [isRevealed, rate])
+
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-8 py-4">
-      {/* Progress indicator */}
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <IconFlame className="size-4" />
-        <span>{dueCardCount} remaining</span>
-      </div>
-
-      {/* Flashcard */}
-      <div className="flex w-full max-w-xl flex-col gap-6">
-        {/* Expression display */}
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-border/60 bg-card px-8 py-10 shadow-xs">
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <Badge variant="secondary">{card.expressionType}</Badge>
-            {card.pronunciation ? (
-              <Badge variant="outline">{card.pronunciation}</Badge>
-            ) : null}
-          </div>
-
-          <p className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">
-            {card.expression}
-          </p>
+    <div className="flex flex-1 flex-col">
+      {/* Card area */}
+      <div className="flex flex-1 flex-col items-center justify-center gap-6 py-4">
+        {/* Progress */}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <IconFlame className="size-4" />
+          <span>{dueCardCount} remaining</span>
         </div>
 
-        {/* Reveal / Answer */}
-        {!isRevealed ? (
-          <div className="flex justify-center">
-            <Button
-              className="px-8"
-              onClick={() => setIsRevealed(true)}
-              size="lg"
-            >
-              <IconEye data-icon="inline-start" />
-              Reveal
-            </Button>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-5">
-            {/* Translation */}
-            <div className="flex flex-col items-center gap-1 rounded-xl border border-border/40 bg-card/50 px-6 py-5">
-              <p className="text-center text-xl font-medium sm:text-2xl">
-                {card.translation}
-              </p>
-              {card.notes ? (
-                <p className="text-center text-sm text-muted-foreground">
-                  {card.notes}
-                </p>
-              ) : null}
-            </div>
+        <StudyFlashcard
+          card={card}
+          isRevealed={isRevealed}
+          onReveal={() => setIsRevealed(true)}
+        />
+      </div>
 
-            {/* Examples */}
-            <div className="grid gap-3 sm:grid-cols-2">
-              {card.examples.map((example) => (
-                <div
-                  key={`${example.targetText}-${example.baseText}`}
-                  className="rounded-lg border border-border/40 px-4 py-3"
-                >
-                  <p className="text-sm font-medium">{example.targetText}</p>
-                  <p className="mt-0.5 text-sm text-muted-foreground">
-                    {example.baseText}
-                  </p>
-                </div>
+      {/* Error */}
+      <form.Subscribe selector={(state) => state.errorMap.onSubmit}>
+        {(reviewError) =>
+          reviewError ? (
+            <Alert className="mb-4" variant="destructive">
+              <IconAlertCircle />
+              <AlertTitle>Could not save the rating</AlertTitle>
+              <AlertDescription>{String(reviewError)}</AlertDescription>
+            </Alert>
+          ) : null
+        }
+      </form.Subscribe>
+
+      {/* Sticky rating footer */}
+      <form.Subscribe selector={(state) => state.isSubmitting}>
+        {(isRating) => (
+          <form
+            className="sticky bottom-0 mt-auto border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur"
+            onSubmit={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              const rating = (
+                e.nativeEvent as SubmitEvent
+              ).submitter?.getAttribute("value") as Rating | null
+              if (rating) {
+                form.setFieldValue("rating", rating)
+              }
+              void form.handleSubmit()
+            }}
+          >
+            <div className="mx-auto grid max-w-xl grid-cols-3 gap-3">
+              {RATINGS.map((r) => (
+                <RatingButton
+                  key={r.value}
+                  disabled={isRating}
+                  label={r.label}
+                  shortcut={r.shortcut}
+                  variant={r.variant}
+                  value={r.value}
+                  icon={r.icon}
+                  isLoading={isRating}
+                />
               ))}
             </div>
-
-            {/* Error */}
-            <form.Subscribe selector={(state) => state.errorMap.onSubmit}>
-              {(reviewError) =>
-                reviewError ? (
-                  <Alert variant="destructive">
-                    <IconAlertCircle />
-                    <AlertTitle>Could not save the rating</AlertTitle>
-                    <AlertDescription>
-                      {String(reviewError)}
-                    </AlertDescription>
-                  </Alert>
-                ) : null
-              }
-            </form.Subscribe>
-
-            {/* Rating buttons */}
-            <form.Field name="rating">
-              {(field) => (
-                <form.Subscribe selector={(state) => state.isSubmitting}>
-                  {(isRating) => (
-                    <div className="grid grid-cols-3 gap-3">
-                      <RatingButton
-                        disabled={isRating}
-                        label="Again"
-                        variant="destructive"
-                        icon={<IconReload className="size-5" />}
-                        onClick={() => {
-                          field.handleChange("again")
-                          void form.handleSubmit()
-                        }}
-                        isLoading={isRating}
-                      />
-                      <RatingButton
-                        disabled={isRating}
-                        label="Hard"
-                        variant="outline"
-                        icon={<IconReload className="size-5" />}
-                        onClick={() => {
-                          field.handleChange("hard")
-                          void form.handleSubmit()
-                        }}
-                        isLoading={isRating}
-                      />
-                      <RatingButton
-                        disabled={isRating}
-                        label="Good"
-                        variant="default"
-                        icon={<IconCheck className="size-5" />}
-                        onClick={() => {
-                          field.handleChange("good")
-                          void form.handleSubmit()
-                        }}
-                        isLoading={isRating}
-                      />
-                    </div>
-                  )}
-                </form.Subscribe>
-              )}
-            </form.Field>
-          </div>
+          </form>
         )}
-      </div>
+      </form.Subscribe>
     </div>
   )
 }
 
+// ─── Rating Button ───────────────────────────────────────────────────────────
+
 type RatingButtonProps = {
   disabled: boolean
   label: string
+  shortcut: string
   variant: "destructive" | "outline" | "default"
+  value: string
   icon: React.ReactNode
-  onClick: () => void
   isLoading: boolean
 }
 
 const RatingButton = ({
   disabled,
   label,
+  shortcut,
   variant,
+  value,
   icon,
-  onClick,
   isLoading,
 }: RatingButtonProps) => (
   <Button
+    type="submit"
+    name="rating"
+    value={value}
     className="h-12 flex-col gap-0.5 text-xs sm:h-14 sm:text-sm"
     disabled={disabled}
-    onClick={onClick}
     variant={variant}
   >
-    {isLoading ? <Spinner className="size-5" /> : icon}
-    {label}
+    {isLoading ? <Spinner className="size-5" /> : <>{icon}</>}
+    <span className="inline-flex items-center gap-1">
+      {label}
+      <kbd className="mt-0.5 hidden text-[10px] leading-none opacity-50 sm:inline">
+        {shortcut}
+      </kbd>
+    </span>
   </Button>
 )
+
+// ─── Empty States ────────────────────────────────────────────────────────────
 
 type ReviewEmptyProps =
   | { variant: "no-cards"; totalCardCount?: never }
@@ -280,6 +299,8 @@ const ReviewEmpty = ({ variant, totalCardCount }: ReviewEmptyProps) => (
   </div>
 )
 
+// ─── Pending ─────────────────────────────────────────────────────────────────
+
 const ReviewPending = () => (
   <>
     <header className="flex items-center gap-3 border-b border-border/60 pb-4">
@@ -287,18 +308,49 @@ const ReviewPending = () => (
       <Skeleton className="h-7 w-20" />
       <Skeleton className="h-5 w-16 rounded-full" />
     </header>
-    <div className="flex flex-1 flex-col items-center justify-center gap-8 py-4">
+    <div className="flex flex-1 flex-col items-center justify-center gap-6 py-4">
       <Skeleton className="h-4 w-28" />
-      <div className="flex w-full max-w-xl flex-col items-center gap-6">
-        <div className="flex w-full flex-col items-center gap-3 rounded-2xl border border-border/60 px-8 py-10">
-          <Skeleton className="h-5 w-16 rounded-full" />
-          <Skeleton className="h-10 w-64" />
-        </div>
-        <Skeleton className="h-11 w-32 rounded-md" />
+      <div className="flex w-full max-w-xl flex-col items-center gap-3 rounded-2xl border border-border/60 px-8 py-10">
+        <Skeleton className="h-5 w-16 rounded-full" />
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="mt-2 h-4 w-24" />
+      </div>
+    </div>
+    <div className="mt-auto border-t border-border/60 px-4 py-4 opacity-40">
+      <div className="mx-auto grid max-w-xl grid-cols-3 gap-3">
+        <Skeleton className="h-12 rounded-md sm:h-14" />
+        <Skeleton className="h-12 rounded-md sm:h-14" />
+        <Skeleton className="h-12 rounded-md sm:h-14" />
       </div>
     </div>
   </>
 )
+
+// ─── Keyboard helpers ────────────────────────────────────────────────────────
+
+const isFormElement = (el: HTMLElement) => {
+  const tag = el?.tagName
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT"
+}
+
+const handleSpaceKey = (
+  isRevealed: boolean,
+  setIsRevealed: (v: boolean) => void,
+  rate: (r: "good") => void
+) => {
+  if (!isRevealed) {
+    setIsRevealed(true)
+  } else {
+    rate("good")
+  }
+}
+
+const handleNumberKey = (key: string, rate: (r: Rating) => void) => {
+  const rating = ratingKeyMap[key]
+  if (rating) rate(rating)
+}
+
+// ─── Route ───────────────────────────────────────────────────────────────────
 
 export const Route = createFileRoute("/_app/study/review")({
   loader: () => getReviewData(),

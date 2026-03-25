@@ -1,13 +1,53 @@
-import { IconArrowsShuffle, IconCards, IconTable } from "@tabler/icons-react"
+import {
+  IconArrowsShuffle,
+  IconCards,
+  IconEditCircle,
+  IconTable,
+} from "@tabler/icons-react"
 import { createFileRoute, Link } from "@tanstack/react-router"
 
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getStudyHubData } from "@/routes/_app/study/-api/get-study-hub-data"
 
 const StudyHubPage = () => {
   const { dueCardCount, totalCardCount } = Route.useLoaderData()
+
+  if (totalCardCount === 0) {
+    return (
+      <div className="flex flex-1 items-center justify-center py-12">
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <IconCards />
+            </EmptyMedia>
+            <EmptyTitle>No cards yet</EmptyTitle>
+            <EmptyDescription>
+              Create your first card to start studying.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Link to="/add-card">
+              <Button>
+                <IconEditCircle data-icon="inline-start" />
+                Add card
+              </Button>
+            </Link>
+          </EmptyContent>
+        </Empty>
+      </div>
+    )
+  }
 
   return (
     <section className="grid gap-4 sm:grid-cols-3">
