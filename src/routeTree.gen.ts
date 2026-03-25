@@ -17,7 +17,11 @@ import { Route as AppStudyRouteImport } from './routes/_app/study'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppAddCardRouteImport } from './routes/_app/add-card'
+import { Route as AppStudyIndexRouteImport } from './routes/_app/study/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AppStudyShuffleRouteImport } from './routes/_app/study/shuffle'
+import { Route as AppStudyReviewRouteImport } from './routes/_app/study/review'
+import { Route as AppStudyBrowseRouteImport } from './routes/_app/study/browse'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -57,10 +61,30 @@ const AppAddCardRoute = AppAddCardRouteImport.update({
   path: '/add-card',
   getParentRoute: () => AppRoute,
 } as any)
+const AppStudyIndexRoute = AppStudyIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppStudyRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppStudyShuffleRoute = AppStudyShuffleRouteImport.update({
+  id: '/shuffle',
+  path: '/shuffle',
+  getParentRoute: () => AppStudyRoute,
+} as any)
+const AppStudyReviewRoute = AppStudyReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => AppStudyRoute,
+} as any)
+const AppStudyBrowseRoute = AppStudyBrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
+  getParentRoute: () => AppStudyRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -68,18 +92,25 @@ export interface FileRoutesByFullPath {
   '/add-card': typeof AppAddCardRoute
   '/dashboard': typeof AppDashboardRoute
   '/settings': typeof AppSettingsRoute
-  '/study': typeof AppStudyRoute
+  '/study': typeof AppStudyRouteWithChildren
   '/onboarding': typeof PublicOnboardingRoute
+  '/study/browse': typeof AppStudyBrowseRoute
+  '/study/review': typeof AppStudyReviewRoute
+  '/study/shuffle': typeof AppStudyShuffleRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/study/': typeof AppStudyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/add-card': typeof AppAddCardRoute
   '/dashboard': typeof AppDashboardRoute
   '/settings': typeof AppSettingsRoute
-  '/study': typeof AppStudyRoute
   '/onboarding': typeof PublicOnboardingRoute
+  '/study/browse': typeof AppStudyBrowseRoute
+  '/study/review': typeof AppStudyReviewRoute
+  '/study/shuffle': typeof AppStudyShuffleRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/study': typeof AppStudyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -88,10 +119,14 @@ export interface FileRoutesById {
   '/_app/add-card': typeof AppAddCardRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/settings': typeof AppSettingsRoute
-  '/_app/study': typeof AppStudyRoute
+  '/_app/study': typeof AppStudyRouteWithChildren
   '/_public/onboarding': typeof PublicOnboardingRoute
   '/_public/': typeof PublicIndexRoute
+  '/_app/study/browse': typeof AppStudyBrowseRoute
+  '/_app/study/review': typeof AppStudyReviewRoute
+  '/_app/study/shuffle': typeof AppStudyShuffleRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_app/study/': typeof AppStudyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -102,16 +137,23 @@ export interface FileRouteTypes {
     | '/settings'
     | '/study'
     | '/onboarding'
+    | '/study/browse'
+    | '/study/review'
+    | '/study/shuffle'
     | '/api/auth/$'
+    | '/study/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/add-card'
     | '/dashboard'
     | '/settings'
-    | '/study'
     | '/onboarding'
+    | '/study/browse'
+    | '/study/review'
+    | '/study/shuffle'
     | '/api/auth/$'
+    | '/study'
   id:
     | '__root__'
     | '/_app'
@@ -122,7 +164,11 @@ export interface FileRouteTypes {
     | '/_app/study'
     | '/_public/onboarding'
     | '/_public/'
+    | '/_app/study/browse'
+    | '/_app/study/review'
+    | '/_app/study/shuffle'
     | '/api/auth/$'
+    | '/_app/study/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -189,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAddCardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/study/': {
+      id: '/_app/study/'
+      path: '/'
+      fullPath: '/study/'
+      preLoaderRoute: typeof AppStudyIndexRouteImport
+      parentRoute: typeof AppStudyRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -196,21 +249,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/study/shuffle': {
+      id: '/_app/study/shuffle'
+      path: '/shuffle'
+      fullPath: '/study/shuffle'
+      preLoaderRoute: typeof AppStudyShuffleRouteImport
+      parentRoute: typeof AppStudyRoute
+    }
+    '/_app/study/review': {
+      id: '/_app/study/review'
+      path: '/review'
+      fullPath: '/study/review'
+      preLoaderRoute: typeof AppStudyReviewRouteImport
+      parentRoute: typeof AppStudyRoute
+    }
+    '/_app/study/browse': {
+      id: '/_app/study/browse'
+      path: '/browse'
+      fullPath: '/study/browse'
+      preLoaderRoute: typeof AppStudyBrowseRouteImport
+      parentRoute: typeof AppStudyRoute
+    }
   }
 }
+
+interface AppStudyRouteChildren {
+  AppStudyBrowseRoute: typeof AppStudyBrowseRoute
+  AppStudyReviewRoute: typeof AppStudyReviewRoute
+  AppStudyShuffleRoute: typeof AppStudyShuffleRoute
+  AppStudyIndexRoute: typeof AppStudyIndexRoute
+}
+
+const AppStudyRouteChildren: AppStudyRouteChildren = {
+  AppStudyBrowseRoute: AppStudyBrowseRoute,
+  AppStudyReviewRoute: AppStudyReviewRoute,
+  AppStudyShuffleRoute: AppStudyShuffleRoute,
+  AppStudyIndexRoute: AppStudyIndexRoute,
+}
+
+const AppStudyRouteWithChildren = AppStudyRoute._addFileChildren(
+  AppStudyRouteChildren,
+)
 
 interface AppRouteChildren {
   AppAddCardRoute: typeof AppAddCardRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppSettingsRoute: typeof AppSettingsRoute
-  AppStudyRoute: typeof AppStudyRoute
+  AppStudyRoute: typeof AppStudyRouteWithChildren
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAddCardRoute: AppAddCardRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppSettingsRoute: AppSettingsRoute,
-  AppStudyRoute: AppStudyRoute,
+  AppStudyRoute: AppStudyRouteWithChildren,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

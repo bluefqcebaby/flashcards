@@ -6,7 +6,14 @@ import {
   IconSettings2,
 } from "@tabler/icons-react"
 
-export type AppRoutePath = "/dashboard" | "/add-card" | "/study" | "/settings"
+export type AppRoutePath =
+  | "/dashboard"
+  | "/add-card"
+  | "/study"
+  | "/study/browse"
+  | "/study/review"
+  | "/study/shuffle"
+  | "/settings"
 
 export type AppNavItem = {
   description: string

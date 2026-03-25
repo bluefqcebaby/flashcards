@@ -9,7 +9,9 @@ export function AppHeader() {
   })
 
   const currentItem =
-    appNavItems.find((item) => item.to === pathname) ?? appNavItems[0]
+    appNavItems.find(
+      (item) => pathname === item.to || pathname.startsWith(`${item.to}/`),
+    ) ?? appNavItems[0]
 
   return (
     <header className="shrink-0 border-b border-border/70 bg-background/90 backdrop-blur">

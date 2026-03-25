@@ -61,3 +61,24 @@ export const rateStudyCardInputSchema = z.object({
 })
 
 export type RateStudyCardInput = z.infer<typeof rateStudyCardInputSchema>
+
+export const updateFlashcardInputSchema = z.object({
+  id: z.string().min(1, "Missing card id."),
+  expression: z
+    .string()
+    .trim()
+    .min(1, "Add the word or phrase you want to study."),
+  expressionType: expressionTypeSchema,
+  translation: z.string().trim().min(1, "Add the main translation."),
+  examples: flashcardExamplesSchema,
+  notes: z.string().trim().optional(),
+  pronunciation: z.string().trim().optional(),
+})
+
+export type UpdateFlashcardInput = z.infer<typeof updateFlashcardInputSchema>
+
+export const deleteFlashcardInputSchema = z.object({
+  id: z.string().min(1, "Missing card id."),
+})
+
+export type DeleteFlashcardInput = z.infer<typeof deleteFlashcardInputSchema>
